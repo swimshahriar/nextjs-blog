@@ -1,0 +1,22 @@
+.navLink:link,
+.navLink:visited {
+  font-family: inherit;
+  color: rgb(238, 238, 238);
+  text-decoration: none;
+  margin: 0.5rem 1rem;
+}
+
+.navLink:active {
+  color: white;
+}
+
+.navLink:hover {
+  color: white;
+}
+
+.dropdownLink:link,
+.dropdownLink:visited {
+  font-family: inherit;
+  color: #212629;
+  text-decoration: none;
+}
