@@ -5,35 +5,20 @@ import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import firebase, { timeStamp } from '../firebase';
+import { timeStamp, db } from '../firebase';
 import { useAuth } from '../hooks/useAuth';
 
-const getStaicProps = () => {
-  const auth = useAuth();
-  let userId;
-  setTimeout(() => {
-    userId = auth.user.uid;
-  }, 1000);
-
-  return {
-    props: {
-      userId,
-    },
-  };
-};
-
-const newPost = ({ userId }) => {
+const newPost = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
-  const fireStore = firebase.firestore();
+  const auth = useAuth();
 
   const dbModel = {
-    createdAt: timeStamp(),
-    userId,
+    createdAt: new Date().toDateString(),
+    userId: auth.user.uid,
     title,
     body,
   };
@@ -43,8 +28,7 @@ const newPost = ({ userId }) => {
     setError('');
     setLoading(true);
 
-    fireStore
-      .collection('posts')
+    db.collection('posts')
       .add(dbModel)
       .then(() => {
         setLoading(false);

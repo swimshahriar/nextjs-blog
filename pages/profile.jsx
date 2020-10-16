@@ -1,13 +1,38 @@
 import Head from 'next/head';
-import { Button, Container } from 'react-bootstrap';
+import { Button, Container, Card, Row, Col } from 'react-bootstrap';
 import Link from 'next/link';
 
-import { useAuth } from '../hooks/useAuth';
 import NavBar from '../components/NavBar';
-import PostCard from '../components/PostCard';
+import { db } from '../firebase';
+import { useAuth } from '../hooks/useAuth';
 
-const profile = () => {
+export const getStaticProps = async () => {
+  let posts = [];
+  await db
+    .collection('posts')
+    .get()
+    .then((querySnapshot) => {
+      const postLists = [];
+      querySnapshot.forEach((doc) => {
+        postLists.push({
+          ...doc.data(),
+          id: doc.id,
+        });
+      });
+      posts = [...postLists];
+    });
+
+  return {
+    props: {
+      posts,
+    },
+    revalidate: 10,
+  };
+};
+
+const profile = ({ posts }) => {
   const auth = useAuth();
+
   return (
     <div>
       <Head>
@@ -24,6 +49,13 @@ const profile = () => {
               color: #fff;
               text-decoration: none;
             }
+            .color:link,
+            .color:visited {
+              color: rgb(21, 163, 184) !important;
+            }
+            .color:hover {
+              color: #fff !important;
+            }
           `}
         </style>
         <Container>
@@ -34,7 +66,29 @@ const profile = () => {
               </Link>
             </Button>
           </div>
-          <PostCard />
+
+          <Row>
+            {posts.length > 0 ? (
+              posts.map((post) => (
+                <Col xs={6} sm={4} md={3} key={post.id} className="m-2">
+                  <Card style={{ minWidth: '15rem' }}>
+                    <Card.Img variant="top" src="#" />
+                    <Card.Body>
+                      <Card.Title>{post.title}</Card.Title>
+                      <Card.Text>{post.body.slice(0, 100)}...</Card.Text>
+                      <Button variant="outline-info" className="color">
+                        <Link href={`/${post.title}`}>
+                          <a className="addbtn color">See Details</a>
+                        </Link>
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))
+            ) : (
+              <h1 className="text-center m-3">Loading...</h1>
+            )}
+          </Row>
         </Container>
       </main>
     </div>
