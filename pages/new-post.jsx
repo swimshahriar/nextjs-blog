@@ -5,39 +5,63 @@ import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { timeStamp, db } from '../firebase';
+import { storage, db } from '../firebase';
 import { useAuth } from '../hooks/useAuth';
 
 const newPost = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [image, setImage] = useState();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const auth = useAuth();
 
-  const dbModel = {
-    createdAt: new Date().toDateString(),
-    userId: auth.user.uid,
-    title,
-    body,
+  const types = ['image/png', 'image/jpeg'];
+
+  // picking the image file and set it to 'file'
+  const changeHandler = (event) => {
+    let selectedFile = event.target.files[0];
+
+    if (selectedFile && types.includes(selectedFile.type)) {
+      setImage(selectedFile);
+      setError('');
+    } else {
+      setImage(null);
+      setError('Please select a valid image type! (ends with .png/.jpeg)');
+    }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
     setLoading(true);
 
-    db.collection('posts')
-      .add(dbModel)
-      .then(() => {
-        setLoading(false);
-        router.push('/profile');
-      })
-      .catch((error) => {
-        setLoading(false);
-        setError(error.message);
-      });
+    const storageRef = storage.ref(
+      image.name + '_' + auth.user.uid + '_' + title
+    );
+
+    await storageRef.put(image).catch((error) => setError(error.message));
+    await storageRef.getDownloadURL().then((imgUrl) => {
+      const dbModel = {
+        createdAt: new Date().toDateString(),
+        imgUrl,
+        userId: auth.user.uid,
+        title,
+        body,
+      };
+
+      db.collection('posts')
+        .add(dbModel)
+        .then(() => {
+          setLoading(false);
+          router.push('/profile');
+        })
+        .catch((error) => {
+          setLoading(false);
+          setError(error.message);
+        });
+    });
   };
 
   return (
@@ -92,6 +116,15 @@ const newPost = () => {
                 size="lg"
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="imageInput">
+              <Form.Label>Image:</Form.Label>
+              <Form.Control
+                required
+                type="file"
+                size="lg"
+                onChange={changeHandler}
               />
             </Form.Group>
             <div className="text-center mt-4">

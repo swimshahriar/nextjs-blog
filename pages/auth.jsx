@@ -22,14 +22,17 @@ const auth = () => {
 
     if (!isLogin) {
       setLoading(true);
-      await auth.signup(email, password).catch((error) => {
-        setError(error.message);
-        router.push('/profile');
-      });
+      await auth
+        .signup(email, password)
+        .then(() => router.push('/profile'))
+        .catch((error) => {
+          setError(error.message);
+        });
     } else {
       setLoading(true);
       await auth
         .signin(email, password)
+        .then(() => router.push('/profile'))
         .catch((error) => setError(error.message));
     }
 

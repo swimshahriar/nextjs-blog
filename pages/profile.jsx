@@ -56,6 +56,14 @@ const profile = ({ posts }) => {
             .color:hover {
               color: #fff !important;
             }
+            .post-flex {
+              display: 'flex';
+              justify-content: 'center';
+              align-items: 'center';
+            }
+            .post-card {
+              width: '30%' !important;
+            }
           `}
         </style>
         <Container>
@@ -66,29 +74,31 @@ const profile = ({ posts }) => {
               </Link>
             </Button>
           </div>
-
-          <Row>
+          <div className="post-flex">
             {posts.length > 0 ? (
               posts.map((post) => (
-                <Col xs={6} sm={4} md={3} key={post.id} className="m-2">
-                  <Card style={{ minWidth: '15rem' }}>
-                    <Card.Img variant="top" src="#" />
-                    <Card.Body>
-                      <Card.Title>{post.title}</Card.Title>
-                      <Card.Text>{post.body.slice(0, 100)}...</Card.Text>
-                      <Button variant="outline-info" className="color">
-                        <Link href={`/${post.title}`}>
-                          <a className="addbtn color">See Details</a>
-                        </Link>
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                </Col>
+                <Card className="post-card m-2" key={post.id}>
+                  <Card.Img
+                    variant="top"
+                    src={post.imgUrl}
+                    style={{ width: '100%' }}
+                  />
+                  <Card.Body>
+                    <Card.Title>{post.title}</Card.Title>
+                    <Card.Text>{post.body.slice(0, 100)}...</Card.Text>
+                    <Card.Text>{post.createdAt}</Card.Text>
+                    <Button variant="outline-info" className="color">
+                      <Link href={`/${post.title}`}>
+                        <a className="addbtn color">See Details</a>
+                      </Link>
+                    </Button>
+                  </Card.Body>
+                </Card>
               ))
             ) : (
-              <h1 className="text-center m-3">Loading...</h1>
+              <h1 className="text-center m-3">NO POSTS YET!</h1>
             )}
-          </Row>
+          </div>
         </Container>
       </main>
     </div>
