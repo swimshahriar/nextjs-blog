@@ -21,9 +21,6 @@ const NavBar = () => {
               <a className={styles.navLink}>Home</a>
             </Link>
 
-            <Link href="/blog">
-              <a className={styles.navLink}>Blog</a>
-            </Link>
             {auth.user ? (
               <NavDropdown title="Account" id="basic-nav-dropdown">
                 <NavDropdown.Item>
