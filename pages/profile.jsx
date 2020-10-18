@@ -1,17 +1,17 @@
+import React, { useState, useCallback, useEffect } from 'react';
 import Head from 'next/head';
 import { Button, Container, Card } from 'react-bootstrap';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import NavBar from '../components/NavBar';
 import { db } from '../firebase';
 import { useAuth } from '../hooks/useAuth';
 
 export const getStaticProps = async () => {
-  const auth = useAuth();
   let posts = [];
   await db
     .collection('posts')
-    .where('userId', '==', auth.user.uid)
     .get()
     .then((querySnapshot) => {
       const postLists = [];
@@ -28,12 +28,24 @@ export const getStaticProps = async () => {
     props: {
       posts,
     },
-    revalidate: 10,
+    revalidate: 5,
   };
 };
 
 const profile = ({ posts }) => {
   const auth = useAuth();
+  const router = useRouter();
+
+  const [loadedPosts, setLoadedPosts] = useState([]);
+
+  useEffect(() => {
+    if (auth.user) {
+      const fetchedPosts = posts.filter(
+        (post) => post.userId === auth.user.uid
+      );
+      setLoadedPosts(fetchedPosts);
+    }
+  }, [auth.user]);
 
   return (
     <div>
@@ -45,7 +57,9 @@ const profile = ({ posts }) => {
       </header>
       <main>
         <Container>
-          <div className="text-right my-3">
+          <h1 className="mt-3 text-center">Your Posts</h1>
+          {auth.user && <p className="text-center my-3">{auth.user.email}</p>}
+          <div className="text-center my-3">
             <Button variant="info">
               <Link href="/new-post">
                 <a className="addbtn">+ ADD</a>
@@ -59,8 +73,8 @@ const profile = ({ posts }) => {
               justifyContent: 'center',
             }}
           >
-            {posts.length > 0 ? (
-              posts.map((post) => (
+            {loadedPosts.length > 0 &&
+              loadedPosts.map((post) => (
                 <Card
                   className="m-2"
                   style={{ width: '30%', minWidth: '300px' }}
@@ -82,9 +96,9 @@ const profile = ({ posts }) => {
                     </Button>
                   </Card.Body>
                 </Card>
-              ))
-            ) : (
-              <h1 className="text-center m-3">NO POSTS YET!</h1>
+              ))}
+            {loadedPosts.length <= 0 && (
+              <h3 className="text-center m-3">NO POSTS YET!</h3>
             )}
           </div>
         </Container>
