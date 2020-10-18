@@ -7,9 +7,11 @@ import { db } from '../firebase';
 import { useAuth } from '../hooks/useAuth';
 
 export const getStaticProps = async () => {
+  const auth = useAuth();
   let posts = [];
   await db
     .collection('posts')
+    .where('userId', '==', auth.user.uid)
     .get()
     .then((querySnapshot) => {
       const postLists = [];
@@ -55,7 +57,6 @@ const profile = ({ posts }) => {
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'center',
-              // alignItems: 'center',
             }}
           >
             {posts.length > 0 ? (
