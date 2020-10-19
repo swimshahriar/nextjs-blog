@@ -4,6 +4,7 @@
   color: rgb(238, 238, 238);
   text-decoration: none;
   margin: 0.5rem 1rem;
+  margin-top: 1rem;
 }
 
 .navLink:active {
@@ -13,16 +14,6 @@
 .navLink:hover {
   color: white;
 }
-
-a#basic-nav-dropdown.dropdown-toggle.nav-link {
-  margin: 0.5rem 5rem;
-}
-
-/* @media (max-width: 991px) {
-  a#basic-nav-dropdown.dropdown-toggle.nav-link {
-    margin: 5rem 1rem;
-  }
-} */
 
 .dropdownLink:link,
 .dropdownLink:visited {

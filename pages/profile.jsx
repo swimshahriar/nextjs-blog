@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { Button, Container, Card, Spinner } from 'react-bootstrap';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
 
 import NavBar from '../components/NavBar';
 import { db, storage } from '../firebase';
@@ -28,7 +29,7 @@ export const getStaticProps = async () => {
     props: {
       posts,
     },
-    revalidate: 5,
+    revalidate: 2,
   };
 };
 
@@ -69,7 +70,7 @@ const profile = ({ posts }) => {
         setTimeout(() => {
           setLoading(false);
           location.reload();
-        }, 5000);
+        }, 3000);
       })
       .catch((error) => {});
   };
@@ -84,21 +85,27 @@ const profile = ({ posts }) => {
       </header>
       <main>
         <Container>
-          <h1 className="mt-3 text-center">Your Posts</h1>
+          <motion.h1
+            className="mt-3 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            Your Posts
+          </motion.h1>
           {auth.user && <p className="text-center my-3">{auth.user.email}</p>}
           <div className="text-center my-3">
-            <Button variant="info">
-              <Link href="/new-post">
-                <a className="addbtn">+ ADD</a>
-              </Link>
+            <Button variant="info" onClick={() => router.push('/new-post')}>
+              + ADD
             </Button>
           </div>
-          <div
+          <motion.div
             style={{
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'center',
             }}
+            initial={{ x: -100 }}
+            animate={{ x: 0 }}
           >
             {loadedPosts.length > 0 &&
               loadedPosts.map((post) => (
@@ -117,12 +124,13 @@ const profile = ({ posts }) => {
                     <Card.Title>{post.title}</Card.Title>
                     <Card.Text>{post.userEmail}</Card.Text>
                     <Card.Text>{post.createdAt}</Card.Text>
-                    <Card.Text>{post.body.slice(0, 100)}...</Card.Text>
                     <div className="text-center">
-                      <Button variant="outline-info" className="color">
-                        <Link href={`/post/${post.id}`}>
-                          <a className="addbtn color">See Details</a>
-                        </Link>
+                      <Button
+                        variant="outline-info"
+                        className="color"
+                        onClick={() => router.push(`/post/${post.id}`)}
+                      >
+                        See Details
                       </Button>
                       {loading ? (
                         <Button variant="danger" disabled className="ml-5">
@@ -151,7 +159,7 @@ const profile = ({ posts }) => {
             {loadedPosts.length <= 0 && (
               <h3 className="text-center m-3">NO POSTS YET!</h3>
             )}
-          </div>
+          </motion.div>
         </Container>
       </main>
       <style jsx>

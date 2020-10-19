@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
 import NavBar from '../components/NavBar';
 import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
 
 import { storage, db } from '../firebase';
 import { useAuth } from '../hooks/useAuth';
@@ -71,18 +72,12 @@ const newPost = () => {
       <Head>
         <title>New Post</title>
       </Head>
-      <style jsx>{`
-        .link:link,
-        .link:visited {
-          color: #15a3b8;
-        }
-      `}</style>
 
       <header>
         <NavBar />
       </header>
 
-      <main>
+      <motion.main initial={{ x: +100 }} animate={{ x: 0 }}>
         <Container className="mt-4">
           <div className="text-center">
             <h1>Add New Post</h1>
@@ -121,8 +116,9 @@ const newPost = () => {
               />
             </Form.Group>
             <Form.Group controlId="imageInput">
-              <Form.Label>Image:</Form.Label>
+              <Form.Label>Cover Image:</Form.Label>
               <Form.Control
+                disabled={loading}
                 required
                 type="file"
                 size="lg"
@@ -131,7 +127,7 @@ const newPost = () => {
             </Form.Group>
             <div className="text-center mt-4">
               {loading ? (
-                <Button variant="info" disabled>
+                <Button variant="info" disabled className="m-3">
                   <Spinner
                     as="span"
                     size="sm"
@@ -142,14 +138,20 @@ const newPost = () => {
                   Loading...
                 </Button>
               ) : (
-                <Button type="submit" variant="info" size="lg">
+                <Button type="submit" variant="info" size="lg" className="m-3">
                   + ADD
                 </Button>
               )}
             </div>
           </Form>
         </Container>
-      </main>
+      </motion.main>
+      <style jsx>{`
+        .link:link,
+        .link:visited {
+          color: #15a3b8;
+        }
+      `}</style>
     </div>
   );
 };

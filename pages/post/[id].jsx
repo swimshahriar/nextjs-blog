@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Container, Button } from 'react-bootstrap';
 import marked from 'marked';
+import { motion } from 'framer-motion';
 
 import NavBar from '../../components/NavBar';
 import { db } from '../../firebase';
@@ -13,7 +14,6 @@ export const getStaticPaths = async () => {
     .collection('posts')
     .get()
     .then((querySnapshot) => {
-      console.log(querySnapshot);
       const postLists = [];
       querySnapshot.forEach((doc) => {
         postLists.push({
@@ -79,7 +79,7 @@ const Post = ({ post }) => {
           <header>
             <NavBar />
           </header>
-          <main>
+          <motion.main initial={{ x: +100 }} animate={{ x: 0 }}>
             <Container>
               <img
                 src={post.imgUrl}
@@ -99,15 +99,17 @@ const Post = ({ post }) => {
                 dangerouslySetInnerHTML={{ __html: marked(post.body) }}
               ></div>
             </Container>
-          </main>
+          </motion.main>
         </>
       )}
       <footer className="m-4">
         <Container>
           {!loadComment && (
-            <Button variant="info" onClick={loadComments}>
-              Load Comments
-            </Button>
+            <div className="text-center">
+              <Button variant="info" onClick={loadComments}>
+                Load Comments
+              </Button>
+            </div>
           )}
 
           <div id="disqus_thread"></div>

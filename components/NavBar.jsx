@@ -11,7 +11,7 @@ const NavBar = () => {
       <Container>
         <Navbar.Brand>
           <Link href="/">
-            <a className={styles.navLink} style={{ fontSize: '2rem' }}>
+            <a className={styles.navLink} style={{ fontSize: '1.5rem' }}>
               Nextjs Blog
             </a>
           </Link>
@@ -24,7 +24,11 @@ const NavBar = () => {
             </Link>
 
             {auth.user ? (
-              <NavDropdown title="Account" id="basic-nav-dropdown">
+              <NavDropdown
+                title="Account"
+                id="basic-nav-dropdown"
+                style={{ margin: '.5rem 1rem' }}
+              >
                 <NavDropdown.Item>
                   <Link href="/profile">
                     <a className={styles.dropdownLink}>Dashboard</a>

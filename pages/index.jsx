@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { Button, Container, Card } from 'react-bootstrap';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
 
 import NavBar from '../components/NavBar';
 import { db } from '../firebase';
@@ -32,6 +33,7 @@ export const getStaticProps = async () => {
 
 const Home = ({ posts }) => {
   const auth = useAuth();
+  const router = useRouter();
 
   return (
     <div>
@@ -43,14 +45,22 @@ const Home = ({ posts }) => {
       </header>
       <main>
         <Container>
-          <h1 className="text-center mt-5">Blog Posts</h1>
-          <div
+          <motion.h1
+            className="text-center mt-5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            Blog Posts
+          </motion.h1>
+          <motion.div
             style={{
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'center',
             }}
             className="my-5"
+            initial={{ x: -100 }}
+            animate={{ x: 0 }}
           >
             {posts.length > 0 ? (
               posts.map((post) => (
@@ -69,11 +79,12 @@ const Home = ({ posts }) => {
                     <Card.Title>{post.title}</Card.Title>
                     <Card.Text>{post.userEmail}</Card.Text>
                     <Card.Text>{post.createdAt}</Card.Text>
-                    <Card.Text>{post.body.slice(0, 100)}...</Card.Text>
-                    <Button variant="outline-info" className="color">
-                      <Link href={`/post/${post.id}`}>
-                        <a className="addbtn color">See Details</a>
-                      </Link>
+                    <Button
+                      variant="outline-info"
+                      className="color"
+                      onClick={() => router.push(`/post/${post.id}`)}
+                    >
+                      See Details
                     </Button>
                   </Card.Body>
                 </Card>
@@ -81,7 +92,7 @@ const Home = ({ posts }) => {
             ) : (
               <h2 className="text-center m-3">NO POSTS YET!</h2>
             )}
-          </div>
+          </motion.div>
         </Container>
       </main>
       <style jsx>
