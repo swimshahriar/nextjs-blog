@@ -13,6 +13,7 @@ export const getStaticProps = async () => {
   let posts = [];
   await db
     .collection('posts')
+    .orderBy('createdAt', 'asc')
     .get()
     .then((querySnapshot) => {
       const postLists = [];
@@ -98,6 +99,11 @@ const profile = ({ posts }) => {
               + ADD
             </Button>
           </div>
+          {loading && (
+            <h4 className="text-center" style={{ color: 'red' }}>
+              Deleting...
+            </h4>
+          )}
           <motion.div
             style={{
               display: 'flex',
@@ -132,26 +138,14 @@ const profile = ({ posts }) => {
                       >
                         See Details
                       </Button>
-                      {loading ? (
-                        <Button variant="danger" disabled className="ml-5">
-                          <Spinner
-                            as="span"
-                            size="sm"
-                            animation="grow"
-                            role="status"
-                            aria-hidden="true"
-                          />
-                          Deleting...
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="danger"
-                          onClick={() => deleteHandler(post)}
-                          className="ml-5"
-                        >
-                          Delete
-                        </Button>
-                      )}
+
+                      <Button
+                        variant="danger"
+                        onClick={() => deleteHandler(post)}
+                        className="ml-5"
+                      >
+                        Delete
+                      </Button>
                     </div>
                   </Card.Body>
                 </Card>

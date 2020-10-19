@@ -57,8 +57,8 @@ const newPost = () => {
       db.collection('posts')
         .add(dbModel)
         .then(() => {
-          setLoading(false);
           setTimeout(() => {
+            setLoading(false);
             router.push('/profile');
           }, 4000);
         })

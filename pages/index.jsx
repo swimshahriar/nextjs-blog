@@ -11,6 +11,7 @@ export const getStaticProps = async () => {
   let posts = [];
   await db
     .collection('posts')
+    .orderBy('createdAt', 'asc')
     .get()
     .then((querySnapshot) => {
       const postLists = [];
