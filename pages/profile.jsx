@@ -13,7 +13,7 @@ export const getStaticProps = async () => {
   let posts = [];
   await db
     .collection('posts')
-    .orderBy('createdAt', 'asc')
+    .orderBy('createdAt', 'desc')
     .get()
     .then((querySnapshot) => {
       const postLists = [];
