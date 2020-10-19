@@ -78,8 +78,12 @@ const Home = ({ posts }) => {
                   />
                   <Card.Body>
                     <Card.Title>{post.title}</Card.Title>
-                    <Card.Text>{post.userEmail}</Card.Text>
-                    <Card.Text>{post.createdAt}</Card.Text>
+                    <Card.Text className="font-weight-light">
+                      {post.userEmail}
+                    </Card.Text>
+                    <Card.Text className="font-weight-light">
+                      {post.createdAt}
+                    </Card.Text>
                     <Button
                       variant="outline-info"
                       className="color"

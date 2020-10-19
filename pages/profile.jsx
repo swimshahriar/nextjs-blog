@@ -99,6 +99,10 @@ const profile = ({ posts }) => {
               + ADD
             </Button>
           </div>
+          <p className="font-weight-light font-italic text-center">
+            (It may take 2 - 5 seconds to perform an operation. Refresh the
+            window to see the changes.)
+          </p>
           {loading && (
             <h4 className="text-center" style={{ color: 'red' }}>
               Deleting...
@@ -128,8 +132,12 @@ const profile = ({ posts }) => {
                   />
                   <Card.Body>
                     <Card.Title>{post.title}</Card.Title>
-                    <Card.Text>{post.userEmail}</Card.Text>
-                    <Card.Text>{post.createdAt}</Card.Text>
+                    <Card.Text className="font-weight-light">
+                      {post.userEmail}
+                    </Card.Text>
+                    <Card.Text className="font-weight-light">
+                      {post.createdAt}
+                    </Card.Text>
                     <div className="text-center">
                       <Button
                         variant="outline-info"
