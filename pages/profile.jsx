@@ -70,7 +70,7 @@ const profile = ({ posts }) => {
         setTimeout(() => {
           setLoading(false);
           location.reload();
-        }, 3000);
+        }, 4000);
       })
       .catch((error) => {});
   };
@@ -141,7 +141,7 @@ const profile = ({ posts }) => {
                             role="status"
                             aria-hidden="true"
                           />
-                          Loading...
+                          Deleting...
                         </Button>
                       ) : (
                         <Button

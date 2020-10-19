@@ -58,7 +58,9 @@ const newPost = () => {
         .add(dbModel)
         .then(() => {
           setLoading(false);
-          router.push('/profile');
+          setTimeout(() => {
+            router.push('/profile');
+          }, 4000);
         })
         .catch((error) => {
           setLoading(false);

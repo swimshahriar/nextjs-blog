@@ -94,6 +94,7 @@ const Post = ({ post }) => {
               <h1>{post.title}</h1>
               <p>{post.userEmail}</p>
               <p>{post.createdAt}</p>
+              <hr />
               <div
                 id="post-body"
                 dangerouslySetInnerHTML={{ __html: marked(post.body) }}

@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { Form, Container, Button, Alert, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
 
 import NavBar from '../components/NavBar';
 import { useAuth } from '../hooks/useAuth';
@@ -47,7 +48,7 @@ const auth = () => {
       <header>
         <NavBar />
       </header>
-      <main>
+      <motion.main initial={{ x: +100 }} animate={{ x: 0 }}>
         <Container>
           <h1 className="text-center mt-5">{isLogin ? 'Login' : 'Register'}</h1>
           <Form onSubmit={handleSubmit}>
@@ -109,7 +110,7 @@ const auth = () => {
             </Button>
           </div>
         </Container>
-      </main>
+      </motion.main>
     </div>
   );
 };
