@@ -62,12 +62,14 @@ const Home = ({ posts }) => {
                   <Card.Img
                     variant="top"
                     src={post.imgUrl}
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', height: '250px' }}
+                    alt={post.imageName}
                   />
                   <Card.Body>
                     <Card.Title>{post.title}</Card.Title>
-                    <Card.Text>{post.body.slice(0, 100)}...</Card.Text>
+                    <Card.Text>{post.userEmail}</Card.Text>
                     <Card.Text>{post.createdAt}</Card.Text>
+                    <Card.Text>{post.body.slice(0, 100)}...</Card.Text>
                     <Button variant="outline-info" className="color">
                       <Link href={`/post/${post.id}`}>
                         <a className="addbtn color">See Details</a>

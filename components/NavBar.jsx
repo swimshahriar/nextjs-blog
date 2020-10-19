@@ -11,7 +11,9 @@ const NavBar = () => {
       <Container>
         <Navbar.Brand>
           <Link href="/">
-            <a className={styles.navLink}>Nextjs Blog</a>
+            <a className={styles.navLink} style={{ fontSize: '2rem' }}>
+              Nextjs Blog
+            </a>
           </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

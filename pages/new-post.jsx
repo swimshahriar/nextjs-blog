@@ -47,6 +47,8 @@ const newPost = () => {
         createdAt: new Date().toDateString(),
         imgUrl,
         userId: auth.user.uid,
+        userEmail: auth.user.email,
+        imageName: image.name,
         title,
         body,
       };
@@ -107,7 +109,7 @@ const newPost = () => {
               />
             </Form.Group>
             <Form.Group controlId="postBodyInput">
-              <Form.Label>Body:</Form.Label>
+              <Form.Label>Body(markdown):</Form.Label>
               <Form.Control
                 required
                 rows={10}

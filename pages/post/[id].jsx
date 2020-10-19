@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Container, Button } from 'react-bootstrap';
+import marked from 'marked';
 
 import NavBar from '../../components/NavBar';
 import { db } from '../../firebase';
@@ -85,14 +86,18 @@ const Post = ({ post }) => {
                 alt={post.title}
                 style={{
                   width: '100%',
-                  height: '40vh',
+                  height: '50vh',
                   backgroundSize: 'cover',
                 }}
                 className="my-3"
               />
               <h1>{post.title}</h1>
+              <p>{post.userEmail}</p>
               <p>{post.createdAt}</p>
-              <div>{post.body}</div>
+              <div
+                id="post-body"
+                dangerouslySetInnerHTML={{ __html: marked(post.body) }}
+              ></div>
             </Container>
           </main>
         </>

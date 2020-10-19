@@ -14,6 +14,16 @@
   color: white;
 }
 
+a#basic-nav-dropdown.dropdown-toggle.nav-link {
+  margin: 0.5rem 5rem;
+}
+
+/* @media (max-width: 991px) {
+  a#basic-nav-dropdown.dropdown-toggle.nav-link {
+    margin: 5rem 1rem;
+  }
+} */
+
 .dropdownLink:link,
 .dropdownLink:visited {
   font-family: inherit;

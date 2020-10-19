@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Button, Container, Card } from 'react-bootstrap';
+import { Button, Container, Card, Spinner } from 'react-bootstrap';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import NavBar from '../components/NavBar';
-import { db } from '../firebase';
+import { db, storage } from '../firebase';
 import { useAuth } from '../hooks/useAuth';
 
 export const getStaticProps = async () => {
@@ -37,6 +37,7 @@ const profile = ({ posts }) => {
   const router = useRouter();
 
   const [loadedPosts, setLoadedPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (auth.user) {
@@ -46,6 +47,32 @@ const profile = ({ posts }) => {
       setLoadedPosts(fetchedPosts);
     }
   }, [auth.user]);
+
+  // delete handler
+  const deleteHandler = (post) => {
+    setLoading(true);
+    const storageRef = storage.ref(
+      post.imageName + '_' + auth.user.uid + '_' + post.title
+    );
+
+    // deleting from firestore
+    db.collection('posts')
+      .doc(post.id)
+      .delete()
+      .then(() => {})
+      .catch((error) => {});
+
+    // deleting from storage
+    storageRef
+      .delete()
+      .then(() => {
+        setTimeout(() => {
+          setLoading(false);
+          location.reload();
+        }, 5000);
+      })
+      .catch((error) => {});
+  };
 
   return (
     <div>
@@ -83,17 +110,41 @@ const profile = ({ posts }) => {
                   <Card.Img
                     variant="top"
                     src={post.imgUrl}
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', height: '250px' }}
+                    alt={post.imageName}
                   />
                   <Card.Body>
                     <Card.Title>{post.title}</Card.Title>
-                    <Card.Text>{post.body.slice(0, 100)}...</Card.Text>
+                    <Card.Text>{post.userEmail}</Card.Text>
                     <Card.Text>{post.createdAt}</Card.Text>
-                    <Button variant="outline-info" className="color">
-                      <Link href={`/post/${post.id}`}>
-                        <a className="addbtn color">See Details</a>
-                      </Link>
-                    </Button>
+                    <Card.Text>{post.body.slice(0, 100)}...</Card.Text>
+                    <div className="text-center">
+                      <Button variant="outline-info" className="color">
+                        <Link href={`/post/${post.id}`}>
+                          <a className="addbtn color">See Details</a>
+                        </Link>
+                      </Button>
+                      {loading ? (
+                        <Button variant="danger" disabled className="ml-5">
+                          <Spinner
+                            as="span"
+                            size="sm"
+                            animation="grow"
+                            role="status"
+                            aria-hidden="true"
+                          />
+                          Loading...
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="danger"
+                          onClick={() => deleteHandler(post)}
+                          className="ml-5"
+                        >
+                          Delete
+                        </Button>
+                      )}
+                    </div>
                   </Card.Body>
                 </Card>
               ))}
